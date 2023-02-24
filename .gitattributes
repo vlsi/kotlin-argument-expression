@@ -1,0 +1,9 @@
+* text=auto
+*.java text
+*.md text
+*.sh text eol=lf
+*.xml text
+*.yaml text
+*.yml text
+*.bat text eol=crlf
+/CHANGELOG.md merge=union

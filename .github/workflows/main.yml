@@ -1,0 +1,76 @@
+# This workflow will build a Java project with Gradle
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches:
+      - '*'
+
+concurrency:
+  # On main, we don't want any jobs cancelled so the sha is used to name the group
+  # On PR branches, we cancel the job if new commits are pushed
+  # More info: https://stackoverflow.com/a/68422069/253468
+  group: ${{ github.ref == 'refs/heads/main' && format('ci-main-{0}', github.sha) || format('ci-main-{0}', github.ref) }}
+  cancel-in-progress: true
+
+jobs:
+  matrix_prep:
+    name: Matrix Preparation
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    env:
+      MATRIX_JOBS: 4
+    steps:
+    - uses: actions/checkout@v3
+    - id: set-matrix
+      run: |
+        node .github/workflows/matrix.js
+
+  build:
+    name: '${{ matrix.name }}'
+    runs-on: ${{ matrix.os }}
+    needs: matrix_prep
+    strategy:
+      matrix: ${{fromJson(needs.matrix_prep.outputs.matrix)}}
+      # fail-fast: false
+    env:
+      TZ: ${{ matrix.tz }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Java ${{ matrix.java_version }}, ${{ matrix.java_distribution }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java_version }}
+          distribution: ${{ matrix.java_distribution }}
+          check-latest: true
+
+      - name: Steps to reproduce
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log('The following command might help reproducing CI results, use Java ${{ matrix.java_version }}')
+            console.log('TZ="${{ matrix.tz }}" _JAVA_OPTIONS="${{ matrix.testExtraJvmArgs }}" ./gradlew check ${{ matrix.extraGradleArgs }}')
+
+      - uses: burrunan/gradle-cache-action@v1
+        # See https://github.com/burrunan/gradle-cache-action
+        name: Build and Test
+        env:
+          _JAVA_OPTIONS: ${{ matrix.testExtraJvmArgs }}
+        with:
+          # It allows different cache contents for different JDKs
+          job-id: java${{ matrix.java_version }}
+          arguments: check ${{ matrix.extraGradleArgs }}
+
+      - name: Publish Test Report
+        uses: scacap/action-surefire-report@v1
+        if: always() && (github.ref == 'refs/heads/main')
+        with:
+          check_name: Test Report for ${{ matrix.name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+
