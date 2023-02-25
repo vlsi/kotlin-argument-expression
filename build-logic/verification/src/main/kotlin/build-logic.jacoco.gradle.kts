@@ -19,8 +19,8 @@ afterEvaluate {
     for (t in arrayOf(testTasks, javaExecTasks)) {
         t.configureEach {
             extensions.findByType<JacocoTaskExtension>()?.apply {
-                // We want collect code coverage for org.postgresql classes only
-                includes?.add("org.postgresql.*")
+                // We want collect code coverage for io.github.vlsi classes only
+                includes?.add("io.github.vlsi.*")
             }
         }
     }
