@@ -23,7 +23,7 @@ tasks.withType<KotlinCompile>().configureEach {
 
 autostyle {
     kotlin {
-        file("$rootDir/config/licenseHeaderRaw").takeIf { it.exists() }?.let {
+        file("$rootDir/config/license-header.txt").takeIf { it.exists() }?.let {
             licenseHeader(it.readText())
         }
         trimTrailingWhitespace()

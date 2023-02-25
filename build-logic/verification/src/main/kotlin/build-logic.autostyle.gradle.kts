@@ -19,8 +19,3 @@ autostyle {
         }
     }
 }
-
-plugins.withId("java") {
-    autostyle {
-    }
-}
