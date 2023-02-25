@@ -22,7 +22,7 @@ releaseParams {
     svnDistEnabled.set(false)
     sitePreviewEnabled.set(false)
     nexus {
-        stagingProfileId.set("io.github.vlsi")
+        packageGroup.set("io.github.vlsi")
         prodUrl.set(uri("https://s01.oss.sonatype.org"))
     }
     voteText.set {
