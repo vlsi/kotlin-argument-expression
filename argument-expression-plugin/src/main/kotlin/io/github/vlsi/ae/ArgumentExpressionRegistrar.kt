@@ -7,13 +7,7 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.com.intellij.mock.MockProject
 import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.config.CompilerConfigurationKey
 import org.jetbrains.kotlin.name.FqName
-
-object ArgumentExpressionConfigurationKeys {
-    val ARGUMENT_EXPRESSION_ANNOTATION: CompilerConfigurationKey<List<String>> =
-        CompilerConfigurationKey.create("argument expression annotation qualified name")
-}
 
 @AutoService(ComponentRegistrar::class)
 class ArgumentExpressionRegistrar(

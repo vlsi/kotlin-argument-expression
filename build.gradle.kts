@@ -1,3 +1,7 @@
+plugins {
+    id("build-logic.root-build")
+}
+
 val buildVersion = "${findProperty("version")}"
 
 println("Building Argument Expression $buildVersion")

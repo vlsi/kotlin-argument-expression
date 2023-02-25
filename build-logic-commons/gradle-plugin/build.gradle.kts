@@ -4,7 +4,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "org.postgresql.build-logic"
+group = "io.github.vlsi.ae.build-logic"
 
 dependencies {
     // We use precompiled script plugins (== plugins written as src/kotlin/build-logic.*.gradle.kts files,

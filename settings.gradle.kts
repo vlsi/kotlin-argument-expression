@@ -13,7 +13,9 @@ dependencyResolutionManagement {
     }
 }
 
+includeBuild("build-logic-commons")
 includeBuild("build-logic")
 
 include("argument-expression-annotations")
 include("argument-expression-plugin")
+include("argument-expression-gradle-plugin")

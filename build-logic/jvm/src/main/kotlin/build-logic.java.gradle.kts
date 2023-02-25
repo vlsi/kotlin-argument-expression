@@ -1,6 +1,7 @@
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
 import com.github.vlsi.gradle.dsl.configureEach
+import com.github.vlsi.jandex.JandexTask
 
 plugins {
     id("java")
@@ -28,6 +29,10 @@ sourceSets {
 
 project.configure<com.github.vlsi.jandex.JandexExtension> {
     skipIndexFileGeneration()
+}
+
+tasks.withType<PluginUnderTestMetadata>().configureEach {
+    dependsOn(tasks.withType<JandexTask>())
 }
 
 if (!buildParameters.enableGradleMetadata) {
