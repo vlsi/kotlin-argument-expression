@@ -83,17 +83,14 @@ fun executeAssertion(
     }
 
     val kClazz = result.classLoader.loadClass("MainKt")
-    val main = kClazz.declaredMethods.single { it.name == "main" && it.parameterCount == 0 }
+    val main = kClazz.declaredMethods.single { it.name == "test" && it.parameterCount == 0 }
+    if (main.returnType != String::class.java) {
+        fail("test() should return String, got ${main.returnType}")
+    }
     try {
-        try {
-            main.invoke(null)
-        } catch (t: InvocationTargetException) {
-            throw t.cause!!
-        }
-        fail("should have thrown assertion")
-    } catch (t: Throwable) {
-        t.printStackTrace()
-        return t.message ?: ""
+        return main.invoke(null) as String
+    } catch (t: InvocationTargetException) {
+        throw t.cause!!
     }
 }
 

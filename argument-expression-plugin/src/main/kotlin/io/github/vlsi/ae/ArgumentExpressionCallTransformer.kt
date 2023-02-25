@@ -81,7 +81,8 @@ class ArgumentExpressionCallTransformer(
                 val callInfo = sourceFile.getSourceRangeInfo(expressionValue)
                 val callIndent = callInfo.startColumnNumber
                 val source = sourceFile.getText(callInfo)
-                    .replace("\n" + " ".repeat(callIndent), "\n") // Remove additional indentation
+                    ?.replace("\n" + " ".repeat(callIndent), "\n") // Remove additional indentation
+                    ?: continue
                 // Actually pass the expression text
                 expression.putArgument(
                     function,

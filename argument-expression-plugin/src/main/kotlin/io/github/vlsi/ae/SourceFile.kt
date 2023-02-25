@@ -3,6 +3,7 @@ package io.github.vlsi.ae
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.SourceRangeInfo
+import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.path
 import org.jetbrains.kotlin.ir.expressions.IrCall
@@ -36,7 +37,10 @@ class SourceFile(
         return irFile.fileEntry.getSourceRangeInfo(range.first, range.last)
     }
 
-    fun getText(info: SourceRangeInfo): String {
+    fun getText(info: SourceRangeInfo): String? {
+        if (info.startOffset == UNDEFINED_OFFSET || info.endOffset == UNDEFINED_OFFSET) {
+            return null
+        }
         return safeSubstring(info.startOffset, info.endOffset)
     }
 
