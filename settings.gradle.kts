@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 
 includeBuild("build-logic")
 
+include("argument-expression-annotations")
 include("argument-expression-plugin")

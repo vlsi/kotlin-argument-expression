@@ -59,12 +59,18 @@ plugins {
     id("io.github.vlsi.kotlin-argument-expression") version "1.0.0"
 }
 
+dependencies {
+    // You can use your own ArgumentExpression annotation, or pull it from argument-expression-annotations
+    implementation("io.github.vlsi.kotlin-argument-expression:argument-expression-annotations:1.0.0")
+}
+```
 // TODO: describe the way to configure annotation name
 ```
 
 ```kotlin
 /**
- * `kotlin-argument-expression` publishes no annotations, so you need to define them yourself.
+ * `kotlin-argument-annotations` exposes annotation,
+ * however, you can create your own if you like to avoid dependency on `kotlin-argument-annotations`.
  */
 @Target(AnnotationTarget.VALUE_PARAMETER)
 annotation class ArgumentExpression(
