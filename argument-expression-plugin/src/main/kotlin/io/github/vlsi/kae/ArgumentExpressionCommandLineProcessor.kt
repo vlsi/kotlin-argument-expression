@@ -1,4 +1,4 @@
-package io.github.vlsi.ae
+package io.github.vlsi.kae
 
 import com.google.auto.service.AutoService
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 
 @AutoService(CommandLineProcessor::class)
 class ArgumentExpressionCommandLineProcessor : CommandLineProcessor {
-    override val pluginId: String = "io.github.vlsi.argument-expression"
+    override val pluginId: String = "io.github.vlsi.argument-expression-base"
 
     override val pluginOptions: Collection<CliOption> = listOf(
         CliOption(

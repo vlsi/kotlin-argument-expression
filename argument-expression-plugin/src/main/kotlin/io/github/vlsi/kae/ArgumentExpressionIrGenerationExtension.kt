@@ -1,4 +1,4 @@
-package io.github.vlsi.ae
+package io.github.vlsi.kae
 
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext

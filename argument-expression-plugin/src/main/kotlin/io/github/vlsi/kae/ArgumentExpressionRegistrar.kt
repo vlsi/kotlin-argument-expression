@@ -1,4 +1,4 @@
-package io.github.vlsi.ae
+package io.github.vlsi.kae
 
 import com.google.auto.service.AutoService
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension

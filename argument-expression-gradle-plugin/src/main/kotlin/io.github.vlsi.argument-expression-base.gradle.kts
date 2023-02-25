@@ -1,6 +1,6 @@
-import io.github.vlsi.ae.gradle.KotlinArgumentExpressionExtension
-import io.github.vlsi.ae.gradle.KotlinArgumentExpressionGradleSubplugin
+import io.github.vlsi.kae.gradle.KotlinArgumentExpressionExtension
+import io.github.vlsi.kae.gradle.KotlinArgumentExpressionGradleSubplugin
 
-project.extensions.create<KotlinArgumentExpressionExtension>(KotlinArgumentExpressionExtension.NAME)
+extensions.create<KotlinArgumentExpressionExtension>(KotlinArgumentExpressionExtension.NAME)
 
 apply<KotlinArgumentExpressionGradleSubplugin>()

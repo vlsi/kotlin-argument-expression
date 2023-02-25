@@ -61,7 +61,7 @@ plugins {
 
 dependencies {
     // You can use your own ArgumentExpression annotation, or pull it from argument-expression-annotations
-    implementation("io.github.vlsi.kotlin-argument-expression:argument-expression-annotations:1.0.0")
+    implementation("io.github.vlsi.kae:argument-expression-annotations:1.0.0")
 }
 ```
 // TODO: describe the way to configure annotation name

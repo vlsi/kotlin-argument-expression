@@ -1,4 +1,4 @@
-package io.github.vlsi.ae
+package io.github.vlsi.kae
 
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.ir.IrElement

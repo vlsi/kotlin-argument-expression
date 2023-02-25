@@ -1,4 +1,4 @@
-package io.github.vlsi.ae.gradle
+package io.github.vlsi.kae.gradle
 
 import org.gradle.api.provider.SetProperty
 

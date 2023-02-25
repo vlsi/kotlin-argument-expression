@@ -1,4 +1,4 @@
-package io.github.vlsi.ae.gradle
+package io.github.vlsi.kae.gradle
 
 import org.gradle.api.provider.Provider
 import org.gradle.kotlin.dsl.the
@@ -13,12 +13,12 @@ class KotlinArgumentExpressionGradleSubplugin : KotlinCompilerPluginSupportPlugi
     }
 
     override fun getCompilerPluginId(): String =
-        "io.github.vlsi.argument-expression"
+        "io.github.vlsi.argument-expression-base"
 
     override fun getPluginArtifact(): SubpluginArtifact =
         SubpluginArtifact(
-            groupId = "io.github.vlsi.ae",
-            artifactId = "argument-expression-gradle-plugin",
+            groupId = "io.github.vlsi.kae",
+            artifactId = "argument-expression-plugin",
             version = "1.0.0"
         )
 

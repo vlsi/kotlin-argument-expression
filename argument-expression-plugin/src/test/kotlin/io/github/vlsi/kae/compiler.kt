@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.vlsi.ae
+package io.github.vlsi.kae
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
@@ -28,7 +28,7 @@ import java.lang.reflect.InvocationTargetException
 
 private val DEFAULT_COMPONENT_REGISTRARS = arrayOf(
     ArgumentExpressionRegistrar(
-        setOf(FqName("io.github.vlsi.ae.ArgumentExpression"))
+        setOf(FqName("io.github.vlsi.kae.ArgumentExpression"))
     )
 )
 
@@ -61,14 +61,14 @@ fun executeAssertion(
         listOf(
             SourceFile.kotlin(
                 "main.kt",
-                "import io.github.vlsi.ae.ArgumentExpression\n" +
+                "import io.github.vlsi.kae.ArgumentExpression\n" +
                         source,
                 trimIndent = false
             ),
             SourceFile.kotlin(
                 "ArgumentExpression.kt",
                 """
-                package io.github.vlsi.ae
+                package io.github.vlsi.kae
                 @Target(AnnotationTarget.VALUE_PARAMETER)
                 annotation class ArgumentExpression(
                     val value: String

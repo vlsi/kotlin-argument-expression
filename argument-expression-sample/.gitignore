@@ -1,0 +1,18 @@
+.gradle
+/build
+/*/build
+/out
+/*/out
+
+# Ignore ide configs
+*.iml
+*.ipr
+*.iws
+/.idea/*
+.settings/
+.classpath
+.project
+.DS_Store
+
+# except this icon
+!/.idea/icon.png
