@@ -27,5 +27,5 @@ plugins.withId("java-library") {
 }
 
 configure<KotlinArgumentExpressionExtension> {
-    argumentExpressionAnnotations.add("io.github.vlsi.kae.ArgumentExpression")
+    argumentExpressionAnnotations.add("io.github.vlsi.kae.CallerArgumentExpression")
 }

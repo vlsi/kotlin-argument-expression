@@ -17,6 +17,6 @@
 package io.github.vlsi.kae
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
-annotation class ArgumentExpression(
+annotation class CallerArgumentExpression(
     val value: String
 )

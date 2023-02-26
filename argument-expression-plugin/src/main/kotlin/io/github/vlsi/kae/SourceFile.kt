@@ -16,13 +16,13 @@
  */
 package io.github.vlsi.kae
 
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.SourceRangeInfo
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.path
 import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import java.io.File
 
 class SourceFile(
@@ -30,6 +30,29 @@ class SourceFile(
 ) {
     private val source: String = File(irFile.path).readText()
         .replace("\r\n", "\n") // https://youtrack.jetbrains.com/issue/KT-41888
+
+    fun expressionTextOrNull(expression: IrElement): String? {
+        val callInfo = getSourceRangeInfo(expression)
+        if (expression.startOffset == UNDEFINED_OFFSET || expression.endOffset == UNDEFINED_OFFSET) {
+            return expression.dumpKotlinLike()
+        }
+        val callIndent = callInfo.startColumnNumber
+        return getText(callInfo)
+            ?.replace(
+                "\n" + " ".repeat(callIndent),
+                "\n"
+            ) // Remove additional indentation
+    }
+
+    fun getText(info: SourceRangeInfo): String? {
+        if (info.startOffset == UNDEFINED_OFFSET || info.endOffset == UNDEFINED_OFFSET) {
+            return null
+        }
+        return safeSubstring(info.startOffset, info.endOffset)
+    }
+
+    private fun safeSubstring(start: Int, end: Int): String =
+        source.substring(maxOf(start, 0), minOf(end, source.length))
 
     fun getSourceRangeInfo(element: IrElement): SourceRangeInfo {
         var range = element.startOffset..element.endOffset
@@ -51,26 +74,5 @@ class SourceFile(
             }
         }
         return irFile.fileEntry.getSourceRangeInfo(range.first, range.last)
-    }
-
-    fun getText(info: SourceRangeInfo): String? {
-        if (info.startOffset == UNDEFINED_OFFSET || info.endOffset == UNDEFINED_OFFSET) {
-            return null
-        }
-        return safeSubstring(info.startOffset, info.endOffset)
-    }
-
-    private fun safeSubstring(start: Int, end: Int): String =
-        source.substring(maxOf(start, 0), minOf(end, source.length))
-
-    fun getCompilerMessageLocation(element: IrElement): CompilerMessageLocation {
-        val info = getSourceRangeInfo(element)
-        val lineContent = getText(info)
-        return CompilerMessageLocation.create(
-            irFile.path,
-            info.startLineNumber,
-            info.startColumnNumber,
-            lineContent
-        )!!
     }
 }

@@ -27,7 +27,7 @@ Of course, you can write the expression text manually, however, it is error-pron
 so kotlin-argument-expression compiler plugin can help you.
 
 ```kotlin
-fun betterRequire(value: Boolean, @ArgumentExpression("value") valueExpression: String = "") {
+fun betterRequire(value: Boolean, @CallerArgumentExpression("value") valueExpression: String = "") {
     contract {
         returns() implies value
     }
@@ -38,7 +38,7 @@ fun betterRequire(value: Boolean, @ArgumentExpression("value") valueExpression: 
 ```
 
 Then you can use `betterRequire` as `betterRequire(args.isNotEmpty())`, and the compiler plugin
-would pass the precondition expression text thanks to `@ArgumentExpression` annotation.
+would pass the precondition expression text thanks to `@CallerArgumentExpression` annotation.
 
 See https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-10.0/caller-argument-expression
 
@@ -53,6 +53,8 @@ In order to use the compiler plugin, you need:
 1. Add the compiler plugin to your build script
 2. Add annotations that should be treated for passing the expression text
 
+### Gradle plugin
+
 Sample Gradle configuration:
 ```kotlin
 plugins {
@@ -63,9 +65,17 @@ dependencies {
     // You can use your own ArgumentExpression annotation, or pull it from argument-expression-annotations
     implementation("io.github.vlsi.kae:argument-expression-annotations:1.0.0")
 }
+
+// io.github.vlsi.kae.gradle.KotlinArgumentExpressionExtension
+kotlinArgumentExpression {
+    // You can use your own ArgumentExpression annotation, or pull it from argument-expression-annotations
+    argumentExpressionAnnotations.add("io.github.vlsi.kae.CallerArgumentExpression")
+}
 ```
-// TODO: describe the way to configure annotation name
-```
+
+### Declaring annotation
+
+You can use `io.github.vlsi.kae.CallerArgumentExpression` annotation, or create your own as follows:
 
 ```kotlin
 /**
@@ -73,13 +83,18 @@ dependencies {
  * however, you can create your own if you like to avoid dependency on `kotlin-argument-annotations`.
  */
 @Target(AnnotationTarget.VALUE_PARAMETER)
-annotation class ArgumentExpression(
+annotation class CallerArgumentExpression(
     val value: String
 )
+```
 
+
+### Capturing caller expression for simple parameter
+
+```kotlin
 fun precondition(
     value: Boolean,
-    @ArgumentExpression("value") valueExpression: String = ""
+    @CallerArgumentExpression("value") valueExpression: String = ""
 ) {
     require(value) { "Precondition failed: $valueExpression" }
 }
@@ -91,6 +106,53 @@ fun main(args: Array<String>) {
 
     // The failure would look as follows:
     // java.lang.IllegalArgumentException: Precondition failed: args.isNotEmpty()
+}
+```
+
+### Capturing caller expression for vararg parameter
+
+You can capture caller argument expressions as `String` (comma-separated list of expressions),
+or as `Array<String>` (array of expressions):
+
+```kotlin
+fun dump(
+    vararg values: String,
+    @CallerArgumentExpression("values") valuesDescription: String = "",
+    @CallerArgumentExpression("values") valuesDescriptionAsArray: Array<String>? = null,
+) {
+    println("values: ${values.contentToString()}")
+    println("    single String expression: $valuesDescription")
+    println("    array of String expressions: ${valuesDescription.joinToString { "<<$it>>" }}")
+}
+
+// Use precondition as follows:
+fun main(args: Array<String>) {
+    // Note that we do not pas valueExpression explicitly
+    dump("a" + "b", "hello" + ", world")
+
+    // Results in
+    // single String expression: ab, hello, world
+    // array of String expressions: <<"a" + "b">>, <<"hello" + ", world">>
+}
+```
+
+### Capturing caller expression for lambda parameters
+
+```kotlin
+fun dump(
+    body: () -> String,
+    @CallerArgumentExpression("body") bodyDescription: String = "",
+) {
+    println("results: ${body()}")
+    println("description: $bodyDescription")
+}
+
+fun main(args: Array<String>) {
+    dump { "hello" + ", world" }
+
+    // Results in
+    // results: hello, world
+    // description: { "hello" + ", world" }
 }
 ```
 

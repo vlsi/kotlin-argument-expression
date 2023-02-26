@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationTargetException
 
 private val DEFAULT_COMPONENT_REGISTRARS = arrayOf(
     ArgumentExpressionRegistrar(
-        setOf(FqName("io.github.vlsi.kae.ArgumentExpression"))
+        setOf(FqName("io.github.vlsi.kae.CallerArgumentExpression"))
     )
 )
 
@@ -55,24 +55,24 @@ fun compile(
     }.compile()
 }
 
-fun executeAssertion(
+fun compile(
     @Language("kotlin") source: String,
     vararg plugins: ComponentRegistrar = DEFAULT_COMPONENT_REGISTRARS
-): String {
-    val result = compile(
+): KotlinCompilation.Result {
+    return compile(
         listOf(
             SourceFile.kotlin(
                 "main.kt",
-                "import io.github.vlsi.kae.ArgumentExpression\n" +
+                "import io.github.vlsi.kae.CallerArgumentExpression\n" +
                         source,
                 trimIndent = false
             ),
             SourceFile.kotlin(
-                "ArgumentExpression.kt",
+                "CallerArgumentExpression.kt",
                 """
                 package io.github.vlsi.kae
                 @Target(AnnotationTarget.VALUE_PARAMETER)
-                annotation class ArgumentExpression(
+                annotation class CallerArgumentExpression(
                     val value: String
                 )
                 """.trimIndent()
@@ -80,6 +80,13 @@ fun executeAssertion(
         ),
         *plugins,
     )
+}
+
+fun executeAssertion(
+    @Language("kotlin") source: String,
+    vararg plugins: ComponentRegistrar = DEFAULT_COMPONENT_REGISTRARS
+): String {
+    val result = compile(source, *plugins)
     assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode) {
         "Compilation messages: ${result.messages}"
     }
@@ -103,4 +110,22 @@ fun assertMessage(
 ) {
     val actual = executeAssertion(source, *plugins)
     assertEquals(message, actual)
+}
+
+fun assertFailMessage(
+    @Language("kotlin") source: String,
+    vararg messages: String,
+    plugins: Array<out ComponentRegistrar> = DEFAULT_COMPONENT_REGISTRARS,
+) {
+    val result = compile(source, *plugins)
+    assertEquals(
+        KotlinCompilation.ExitCode.COMPILATION_ERROR,
+        result.exitCode,
+        "It is expected to fail compilation"
+    )
+    for (message in messages) {
+        if (message !in result.messages) {
+            fail("Compilation output should include $message, got: ${result.messages}")
+        }
+    }
 }

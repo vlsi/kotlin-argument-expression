@@ -23,7 +23,7 @@ class ScalarExpressionTest {
     fun `int argument`() {
         assertMessage(
             """
-            fun testArgumentExpression(arg: Int, @ArgumentExpression("arg") argDescription: String = "") =
+            fun testArgumentExpression(arg: Int, @CallerArgumentExpression("arg") argDescription: String = "") =
                 "arg: ${'$'}arg, description: ${'$'}argDescription"
 
             fun test(): String {
@@ -41,9 +41,9 @@ class ScalarExpressionTest {
             """
             fun testArgumentExpression(
                 x: Int,
-                @ArgumentExpression("x") xDescription: String = "",
+                @CallerArgumentExpression("x") xDescription: String = "",
                 y: String,
-                @ArgumentExpression("y") yDescription: String = "",
+                @CallerArgumentExpression("y") yDescription: String = "",
             ) =
                 "${'$'}xDescription: ${'$'}x, ${'$'}yDescription: ${'$'}y"
 
@@ -58,55 +58,31 @@ class ScalarExpressionTest {
     }
 
     @Test
-    fun `labmda expression`() {
-        assertMessage(
+    fun `unknown argument requested for expression`() {
+        assertFailMessage(
             """
-            class Expect<Value>(val value: Value, private val description: String, val verb : String = "I expect") {
-                val messages = mutableListOf<String>()
-                val nested = mutableListOf<Expect<*>>()
-
-                fun toEqual(other: Any, @ArgumentExpression("other") otherDescription: String = "") {
-                    if (value != other) {
-                        messages.add("to equal ${'$'}other <<${'$'}otherDescription>>")
-                    }
-                }
-
-                 val allMessages: List<String>
-                     get() =
-                        listOf("${'$'}verb <<${'$'}description>> ${'$'}value") +
-                            messages.map { "    ${'$'}it" } +
-                            nested.flatMap { it.allMessages.map { "    ${'$'}it" } }
-            }
-
-            fun <Value> expect(
-                value: Value,
-                @ArgumentExpression("value") description: String = "",
-                verb: String = "I expect",
-                expectations: Expect<Value>.() -> Unit = {}
-            ): Expect<Value>
-                = Expect(value, description = description, verb = verb).apply(expectations)
-
-            fun <Value, SubValue> Expect<Value>.its(
-                @ArgumentExpression("extractor")
-                name: String = "",
-                extractor: Value.() -> SubValue
-            ): Expect<SubValue> =
-                expect(extractor(value), description = name, verb = "Its").also { nested.add(it) }
-
-            fun test() : String {
-                val results = "world"
-                return expect(listOf(1, 2)) {
-                    its { size + 1 }.toEqual(1 + 3)
-                    its { first() }.toEqual(value.get(1))
-                }.allMessages.joinToString("\n")
-            }
+            fun testArgumentExpression(
+                x: Int,
+                @CallerArgumentExpression("xy") xDescription: Int = 0,
+            ) = ""
             """.trimIndent(),
             """
-            I expect <<listOf(1, 2)>> [1, 2]
-                Its <<{ size + 1 }>> 3
-                    to equal 4 <<1 + 3>>
-                Its <<{ first() }>> 1
-                    to equal 2 <<get(1)>>
+            (4, 5): Unable to find parameter xy for function testArgumentExpression
+            """.trimIndent()
+        )
+    }
+
+    @Test
+    fun `Int can not be used for description`() {
+        assertFailMessage(
+            """
+            fun testArgumentExpression(
+                x: Int,
+                @CallerArgumentExpression("x") xDescription: Int = 0,
+            ) = ""
+            """.trimIndent(),
+            """
+            (4, 5): Only String and Array<String> are supported as argument expression types. Parameter 'xDescription' is of type kotlin.Int
             """.trimIndent()
         )
     }
