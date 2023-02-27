@@ -122,6 +122,10 @@ class ArgumentExpressionCallTransformer(
         return super.visitFunctionNew(declaration)
     }
 
+    /**
+     * Adds caller argument expression to function calls that have `@CallerArgumentExpression`
+     * annotation.
+     */
     override fun visitCall(expression: IrCall): IrExpression {
         // If there's no arguments, there's no need to check the annotations
         if (expression.valueArgumentsCount == 0) {
@@ -237,7 +241,6 @@ class ArgumentExpressionCallTransformer(
         return super.visitCall(expression)
     }
 
-
     private fun getAnnotationValueOrNull(annotation: IrConstructorCall, errorContext: IrElement): IrConst<String>? {
         val valueArgument = annotation.getValueArgument(Name.identifier("value"))
         if (valueArgument == null) {
@@ -248,6 +251,7 @@ class ArgumentExpressionCallTransformer(
             )
             return null
         }
+        @Suppress("UnnecessaryVariable")
         if (valueArgument !is IrConst<*>) {
             messageCollector.report(
                 CompilerMessageSeverity.ERROR,
@@ -264,6 +268,7 @@ class ArgumentExpressionCallTransformer(
             )
             return null
         }
+        @Suppress("UNCHECKED_CAST")
         return valueArgument as IrConst<String>
     }
 

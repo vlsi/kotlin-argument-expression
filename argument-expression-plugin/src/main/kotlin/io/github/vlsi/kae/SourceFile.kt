@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.SourceRangeInfo
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrFile
-import org.jetbrains.kotlin.ir.declarations.path
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import java.io.File
@@ -28,7 +27,7 @@ import java.io.File
 class SourceFile(
     private val irFile: IrFile
 ) {
-    private val source: String = File(irFile.path).readText()
+    private val source: String = File(irFile.fileEntry.name).readText()
         .replace("\r\n", "\n") // https://youtrack.jetbrains.com/issue/KT-41888
 
     fun expressionTextOrNull(expression: IrElement): String? {
@@ -44,7 +43,7 @@ class SourceFile(
             ) // Remove additional indentation
     }
 
-    fun getText(info: SourceRangeInfo): String? {
+    private fun getText(info: SourceRangeInfo): String? {
         if (info.startOffset == UNDEFINED_OFFSET || info.endOffset == UNDEFINED_OFFSET) {
             return null
         }
@@ -54,7 +53,7 @@ class SourceFile(
     private fun safeSubstring(start: Int, end: Int): String =
         source.substring(maxOf(start, 0), minOf(end, source.length))
 
-    fun getSourceRangeInfo(element: IrElement): SourceRangeInfo {
+    private fun getSourceRangeInfo(element: IrElement): SourceRangeInfo {
         var range = element.startOffset..element.endOffset
         when (element) {
             is IrCall -> {

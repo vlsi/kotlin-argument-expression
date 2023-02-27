@@ -1,8 +1,5 @@
 import com.github.vlsi.gradle.dsl.configureEach
-import org.gradle.api.publish.internal.PublicationInternal
 import com.github.vlsi.gradle.publishing.dsl.simplifyXml
-import org.gradle.configurationcache.extensions.capitalized
-import java.util.Locale
 
 plugins {
     id("java-library")
@@ -27,7 +24,6 @@ publishing {
         pom {
             simplifyXml()
             val capitalizedName = project.name
-                .capitalized()
             name.set(
                 (project.findProperty("artifact.name") as? String) ?: "argument-expression $capitalizedName"
             )
