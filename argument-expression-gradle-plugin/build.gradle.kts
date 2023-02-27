@@ -9,7 +9,7 @@ dependencies {
 pluginBundle {
     website = "https://github.com/vlsi/kotlin-argument-expression"
     vcsUrl = "https://github.com/vlsi/kotlin-argument-expression.git"
-    tags = listOf("kotlin", "argument", "expression", "compiler", "plugin")
+    tags = listOf("kotlin", "argument", "expression", "compiler-plugin")
 }
 
 gradlePlugin {
