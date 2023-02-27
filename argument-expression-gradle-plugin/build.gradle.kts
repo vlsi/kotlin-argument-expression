@@ -14,11 +14,11 @@ pluginBundle {
 
 gradlePlugin {
     plugins {
-        named("io.github.vlsi.argument-expression-base") {
+        named("io.github.vlsi.kotlin-argument-expression-base") {
             displayName = "Base configuration of kotlin-argument-expression plugin"
             description = "Enables fine-tuning the behavior of kotlin-argument-expression plugin"
         }
-        named("io.github.vlsi.argument-expression") {
+        named("io.github.vlsi.kotlin-argument-expression") {
             displayName = "Default configuration for kotlin-argument-expression plugin"
             description = "Adds a default compiler plugin configuration, and a dependency on argument-expression-annotations"
         }

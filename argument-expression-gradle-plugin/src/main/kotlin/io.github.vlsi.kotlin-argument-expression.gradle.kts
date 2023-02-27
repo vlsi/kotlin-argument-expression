@@ -17,10 +17,10 @@
 import io.github.vlsi.kae.gradle.KotlinArgumentExpressionExtension
 
 plugins {
-    id("io.github.vlsi.argument-expression-base")
+    id("io.github.vlsi.kotlin-argument-expression-base")
 }
 
-plugins.withId("java-library") {
+plugins.withId("java") {
     dependencies {
         "implementation"("io.github.vlsi.kae:argument-expression-annotations:1.0.0")
     }

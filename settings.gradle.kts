@@ -2,14 +2,19 @@ rootProject.name = "kotlin-argument-expression"
 
 pluginManagement {
     plugins {
-        kotlin("jvm") version "1.7.10"
-        kotlin("kapt") version "1.7.10"
+        kotlin("jvm") version "1.6.21"
+        kotlin("kapt") version "1.6.21"
     }
 }
 
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+        mavenLocal {
+            content {
+                includeGroupByRegex("io\\.github\\.vlsi.*")
+            }
+        }
     }
 }
 

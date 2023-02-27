@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 
 @AutoService(CommandLineProcessor::class)
 class ArgumentExpressionCommandLineProcessor : CommandLineProcessor {
-    override val pluginId: String = "io.github.vlsi.argument-expression-base"
+    override val pluginId: String = "io.github.vlsi.kotlin-argument-expression-base"
 
     override val pluginOptions: Collection<CliOption> = listOf(
         CliOption(

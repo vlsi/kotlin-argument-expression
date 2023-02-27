@@ -1,5 +1,5 @@
-[![GitHub CI](https://github.com/vlsi/kotlin-argument-expression/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/vlsi/kotlin-argument-expression/actions/workflows/main.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.vlsi.argument-expression/argument-expression-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.vlsi.argument-expression/argument-expression-plugin)
+[![GitHub CI](https://github.com/vlsi/kotlin-argument-expression/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/vlsi/kotlin-argument-expression/actions/workflows/main.yml)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.vlsi.kae/argument-expression-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.vlsi.kae/argument-expression-plugin)
 
 # Argument Expression compiler plugin for Kotlin
 
@@ -10,7 +10,7 @@ See also https://github.com/bnorm/kotlin-power-assert
 
 ## Motivation
 
-You might often used preconditions, however, the error reporting is not always helpful:
+You might often use preconditions, however, the error reporting is not always helpful:
 
 ```kotlin
 fun main(args: Array<String>) {
@@ -42,10 +42,12 @@ would pass the precondition expression text thanks to `@CallerArgumentExpression
 
 See https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-10.0/caller-argument-expression
 
-## Supported Kotlin versions
+## Compatibility matrix
 
-Currently, the plugin is built and tested with Kotlin 1.7.10.
-
+* `io.github.vlsi.kotlin-argument-expression` 1.0.0 requires
+  * Kotlin 1.6.21+
+  * Java 1.8+
+  * Gradle 6.1.1+ (required by Kotlin 1.6.21)
 
 ## Usage
 
@@ -56,20 +58,34 @@ In order to use the compiler plugin, you need:
 ### Gradle plugin
 
 Sample Gradle configuration:
+
 ```kotlin
 plugins {
+    // io.github.vlsi.kotlin-argument-expression plugin
+    // * adds implementation dependency on io.github.vlsi.kae:argument-expression-annotations
+    // * configures io.github.vlsi.kae.CallerArgumentExpression annotation for compiler plugin
     id("io.github.vlsi.kotlin-argument-expression") version "1.0.0"
 }
 
-dependencies {
-    // You can use your own ArgumentExpression annotation, or pull it from argument-expression-annotations
-    implementation("io.github.vlsi.kae:argument-expression-annotations:1.0.0")
+// extension type: io.github.vlsi.kae.gradle.KotlinArgumentExpressionExtension
+kotlinArgumentExpression {
+    // You can add your own CallerArgumentExpression annotations for processing
+    argumentExpressionAnnotations.add("com.example.CallerArgumentExpression")
+}
+```
+
+The above configuration should be good for most of the cases, however, if you want to opt-out
+of `io.github.vlsi.kae:argument-expression-annotations` dependency, you can use `-base` plugin:
+
+```kotlin
+plugins {
+    id("io.github.vlsi.kotlin-argument-expression-base") version "1.0.0"
 }
 
-// io.github.vlsi.kae.gradle.KotlinArgumentExpressionExtension
+// extension type: io.github.vlsi.kae.gradle.KotlinArgumentExpressionExtension
 kotlinArgumentExpression {
-    // You can use your own ArgumentExpression annotation, or pull it from argument-expression-annotations
-    argumentExpressionAnnotations.add("io.github.vlsi.kae.CallerArgumentExpression")
+    // Configure CallerArgumentExpression annotation
+    argumentExpressionAnnotations.add("com.example.CallerArgumentExpression")
 }
 ```
 

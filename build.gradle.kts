@@ -3,16 +3,15 @@ plugins {
     id("com.github.vlsi.stage-vote-release") version "1.86"
 }
 
-val buildVersion = "${findProperty("version")}${releaseParams.snapshotSuffix}"
-
-println("Building Argument Expression $buildVersion")
-
-val isReleaseVersion = rootProject.releaseParams.release.get()
+val snapshotSuffix = rootProject.releaseParams.snapshotSuffix
 
 allprojects {
     group = "io.github.vlsi.kae"
-    version = project.findProperty("version") as? String ?: rootProject.version
+    version = (project.findProperty("version") as? String ?: rootProject.version.toString()) +
+            snapshotSuffix
 }
+
+println("Building Argument Expression $version")
 
 releaseParams {
     tlp.set("kotlin-argument-expression")

@@ -29,7 +29,7 @@ class KotlinArgumentExpressionGradleSubplugin : KotlinCompilerPluginSupportPlugi
     }
 
     override fun getCompilerPluginId(): String =
-        "io.github.vlsi.argument-expression-base"
+        "io.github.vlsi.kotlin-argument-expression-base"
 
     override fun getPluginArtifact(): SubpluginArtifact =
         SubpluginArtifact(
