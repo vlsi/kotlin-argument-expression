@@ -1,5 +1,5 @@
 [![GitHub CI](https://github.com/vlsi/kotlin-argument-expression/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/vlsi/kotlin-argument-expression/actions/workflows/main.yml)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.vlsi.kae/argument-expression-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.vlsi.kae/argument-expression-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.vlsi.kae/argument-expression-plugin)](https://central.sonatype.com/search?q=argument-expression-annotations&namespace=io.github.vlsi.kae)
 
 # Argument Expression compiler plugin for Kotlin
 
