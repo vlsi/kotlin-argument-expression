@@ -329,8 +329,8 @@ class ArgumentExpressionCallTransformer(
             val range = file.fileEntry.getSourceRangeInfo(startOffset, endOffset)
             return CompilerMessageLocation.create(
                 path = range.filePath,
-                line = range.startLineNumber.let { if (it < 0) it else it + 1 },
-                column = range.startColumnNumber.let { if (it < 0) it else it + 1 },
+                line = range.startLineNumber.let { if (it < 0) 1 else it + 1 },
+                column = range.startColumnNumber.let { if (it < 0) 1 else it + 1 },
                 lineContent = null
             )
         }
