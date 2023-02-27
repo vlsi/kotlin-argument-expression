@@ -24,5 +24,5 @@ forbiddenApis {
 }
 
 tasks.configureEach<CheckForbiddenApis> {
-    exclude("**/org/postgresql/util/internal/Unsafe.class")
+    exclude("**/io/github/vlsi/**/internal/Unsafe.class")
 }
