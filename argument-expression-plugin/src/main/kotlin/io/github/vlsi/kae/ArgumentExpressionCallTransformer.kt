@@ -126,10 +126,10 @@ class ArgumentExpressionCallTransformer(
      * Adds caller argument expression to function calls that have `@CallerArgumentExpression`
      * annotation.
      */
-    override fun visitCall(expression: IrCall): IrExpression {
+    override fun visitFunctionAccess(expression: IrFunctionAccessExpression): IrExpression {
         // If there's no arguments, there's no need to check the annotations
         if (expression.valueArgumentsCount == 0) {
-            return super.visitCall(expression)
+            return super.visitFunctionAccess(expression)
         }
         val function = expression.symbol.owner
         for (parameter in function.valueParameters) {
@@ -238,7 +238,7 @@ class ArgumentExpressionCallTransformer(
                 )
             }
         }
-        return super.visitCall(expression)
+        return super.visitFunctionAccess(expression)
     }
 
     private fun getAnnotationValueOrNull(annotation: IrConstructorCall, errorContext: IrElement): IrConst<String>? {
@@ -274,8 +274,8 @@ class ArgumentExpressionCallTransformer(
 
     private fun getCallerArgumentExpressionOrNull(
         argName: IrConst<String>,
-        expression: IrCall,
-        function: IrSimpleFunction,
+        expression: IrFunctionAccessExpression,
+        function: IrFunction,
         errorContext: IrExpression
     ): IrExpression? {
         if (argName.value == "this") {

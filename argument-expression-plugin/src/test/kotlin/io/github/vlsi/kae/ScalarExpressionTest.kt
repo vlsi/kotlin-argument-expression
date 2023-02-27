@@ -36,6 +36,23 @@ class ScalarExpressionTest {
     }
 
     @Test
+    fun `constructor argument`() {
+        assertMessage(
+            """
+            class Named<Value>(
+                val value: Value,
+                @CallerArgumentExpression("value") val name: String = ""
+            ) {
+                override fun toString(): String = "Named(value=${'$'}value, name='${'$'}name')"
+            }
+
+            fun test(): String = Named(1 + 2).toString()
+            """.trimIndent(),
+            "Named(value=3, name='1 + 2')"
+        )
+    }
+
+    @Test
     fun `two arguments test`() {
         assertMessage(
             """
