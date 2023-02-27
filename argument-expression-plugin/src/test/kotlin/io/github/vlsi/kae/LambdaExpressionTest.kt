@@ -68,7 +68,7 @@ class LambdaExpressionTest {
                 Its <<{ size + 1 }>> 3
                     to equal 4 <<1 + 3>>
                 Its <<{ first() }>> 1
-                    to equal 2 <<get(1)>>
+                    to equal 2 <<value.get(1)>>
             """.trimIndent()
         )
     }

@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.ir.SourceRangeInfo
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrMemberAccessExpression
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import java.io.File
 
@@ -53,25 +54,21 @@ class SourceFile(
     private fun safeSubstring(start: Int, end: Int): String =
         source.substring(maxOf(start, 0), minOf(end, source.length))
 
-    private fun getSourceRangeInfo(element: IrElement): SourceRangeInfo {
-        var range = element.startOffset..element.endOffset
-        when (element) {
-            is IrCall -> {
-                val receiver = element.extensionReceiver ?: element.dispatchReceiver
-                if (element.symbol.owner.isInfix && receiver != null) {
-                    // When an infix function is called *not* with infix notation, the startOffset will not include the receiver.
-                    // Force the range to include the receiver, so it is always present
-                    range = receiver.startOffset..element.endOffset
+    private fun getSourceRangeInfo(element: IrElement): SourceRangeInfo =
+        irFile.fileEntry.getSourceRangeInfo(element.actualStartOffset, element.endOffset)
 
-                    // The offsets of the receiver will *not* include surrounding parentheses so these need to be checked for
-                    // manually.
-                    val substring = safeSubstring(receiver.startOffset - 1, receiver.endOffset + 1)
-                    if (substring.startsWith('(') && substring.endsWith(')')) {
-                        range = receiver.startOffset - 1..element.endOffset
-                    }
+    private val IrElement.actualStartOffset: Int
+        get() {
+            var offset = startOffset
+            var current = this
+            while (current is IrMemberAccessExpression<*>) {
+                val receiver = current.extensionReceiver ?: current.dispatchReceiver ?: break
+                val receiverOffset = receiver.startOffset
+                if (receiverOffset in 0 until offset) {
+                    offset = receiverOffset
                 }
+                current = receiver
             }
+            return offset
         }
-        return irFile.fileEntry.getSourceRangeInfo(range.first, range.last)
-    }
 }

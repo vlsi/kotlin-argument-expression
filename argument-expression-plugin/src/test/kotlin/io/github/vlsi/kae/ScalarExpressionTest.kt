@@ -36,6 +36,22 @@ class ScalarExpressionTest {
     }
 
     @Test
+    fun `dot expression`() {
+        assertMessage(
+            """
+            fun testArgumentExpression(arg: String, @CallerArgumentExpression("arg") argDescription: String = "") =
+                "arg: ${'$'}arg, description: ${'$'}argDescription"
+
+            fun test(): String {
+                val answer = 42
+                return testArgumentExpression(answer.toString().plus("abcd"))
+            }
+            """.trimIndent(),
+            "arg: 42abcd, description: answer.toString().plus(\"abcd\")"
+        )
+    }
+
+    @Test
     fun `constructor argument`() {
         assertMessage(
             """
