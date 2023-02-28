@@ -52,6 +52,82 @@ class ScalarExpressionTest {
     }
 
     @Test
+    fun `static java call`() {
+        assertMessage(
+            """
+            import java.time.Duration
+            fun testArgumentExpression(arg: Duration?, @CallerArgumentExpression("arg") argDescription: String = "") =
+                "arg: ${'$'}arg, description: ${'$'}argDescription"
+
+            fun test(): String {
+                val answer = 42L
+                return testArgumentExpression(Duration.ofSeconds(answer))
+            }
+            """.trimIndent(),
+            "arg: PT42S, description: Duration.ofSeconds(answer)"
+        )
+    }
+
+    @Test
+    fun `static import java call`() {
+        assertMessage(
+            """
+            import java.time.Duration
+            import java.time.Duration.ofSeconds
+            fun testArgumentExpression(arg: Duration?, @CallerArgumentExpression("arg") argDescription: String = "") =
+                "arg: ${'$'}arg, description: ${'$'}argDescription"
+
+            fun test(): String {
+                val answer = 42L
+                return testArgumentExpression(ofSeconds(answer))
+            }
+            """.trimIndent(),
+            "arg: PT42S, description: Duration.ofSeconds(answer)"
+        )
+    }
+
+    @Test
+    fun `companion call`() {
+        assertMessage(
+            """
+            import java.time.Duration
+
+            class Test {
+                companion object {
+                    fun test(x: Int) = x
+                }
+            }
+
+            fun testArgumentExpression(arg: Int, @CallerArgumentExpression("arg") argDescription: String = "") =
+                "arg: ${'$'}arg, description: ${'$'}argDescription"
+
+            fun test(): String {
+                val answer = 42
+                return testArgumentExpression(Test.test(answer))
+            }
+            """.trimIndent(),
+            "arg: 42, description: Test.test(answer)"
+        )
+    }
+
+    @Test
+    fun `cast as`() {
+        assertMessage(
+            """
+            import java.time.Duration
+            fun testArgumentExpression(arg: Duration, @CallerArgumentExpression("arg") argDescription: String = "") =
+                "arg: ${'$'}arg, description: ${'$'}argDescription"
+
+            fun test(): String {
+                val answer = Duration.ofSeconds(42)
+                return testArgumentExpression(answer as Duration)
+            }
+            """.trimIndent(),
+            "arg: PT42S, description: answer as Duration"
+        )
+    }
+
+    @Test
     fun `constructor argument`() {
         assertMessage(
             """

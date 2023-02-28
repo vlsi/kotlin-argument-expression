@@ -22,7 +22,11 @@ import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrMemberAccessExpression
+import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
+import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
+import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
+import org.jetbrains.kotlin.ir.util.isFromJava
 import java.io.File
 
 class SourceFile(
@@ -37,19 +41,51 @@ class SourceFile(
             return expression.dumpKotlinLike()
         }
         val callIndent = callInfo.startColumnNumber
-        return getText(callInfo)
-            ?.replace(
+        val result = getText(callInfo)
+            .replace(
                 "\n" + " ".repeat(callIndent),
                 "\n"
             ) // Remove additional indentation
+        val prefix = getExtraPrefix(expression)
+        return prefix?.let { it + result } ?: result
     }
 
-    private fun getText(info: SourceRangeInfo): String? {
-        if (info.startOffset == UNDEFINED_OFFSET || info.endOffset == UNDEFINED_OFFSET) {
-            return null
+    private fun getText(info: SourceRangeInfo): String =
+        safeSubstring(info.startOffset, info.endOffset)
+
+    private fun getExtraPrefix(expression: IrElement): String? =
+        when (expression) {
+            is IrTypeOperatorCall -> {
+                when (expression.operator) {
+                    IrTypeOperator.IMPLICIT_NOTNULL,
+                    IrTypeOperator.IMPLICIT_DYNAMIC_CAST,
+                    IrTypeOperator.IMPLICIT_INTEGER_COERCION,
+                    IrTypeOperator.IMPLICIT_COERCION_TO_UNIT ->
+                        getExtraPrefix(expression.argument)
+
+                    else -> null
+                }
+            }
+
+            is IrCall -> {
+                if (expression.dispatchReceiver != null || expression.extensionReceiver != null ||
+                    !expression.symbol.owner.isFromJava()
+                ) {
+                    null
+                } else {
+                    // offsets for Static calls to Java methods do not include the class name
+                    // We can't tell if the method was statically imported or not, so we always
+                    // add a class prefix
+                    expression.type.classFqName
+                        ?.takeIf { !it.isRoot }
+                        ?.shortName()
+                        ?.asString()
+                        ?.let { "$it." }
+                }
+            }
+
+            else -> null
         }
-        return safeSubstring(info.startOffset, info.endOffset)
-    }
 
     private fun safeSubstring(start: Int, end: Int): String =
         source.substring(maxOf(start, 0), minOf(end, source.length))
