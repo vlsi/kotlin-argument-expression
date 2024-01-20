@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.createIrBuilder
 import org.jetbrains.kotlin.backend.jvm.codegen.AnnotationCodegen.Companion.annotationClass
-import org.jetbrains.kotlin.backend.jvm.ir.getValueArgument
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
@@ -239,6 +238,13 @@ class ArgumentExpressionCallTransformer(
             }
         }
         return super.visitFunctionAccess(expression)
+    }
+
+    private fun IrConstructorCall.getValueArgument(name: Name): IrExpression? {
+        // This was in org.jetbrains.kotlin.backend.jvm.ir before Kotlin 1.9.20
+        // And it moved to org.jetbrains.kotlin.ir.util in https://github.com/JetBrains/kotlin/commit/59f1a0dd8e81021aa881977ab4bac9580e9b4772
+        val index = symbol.owner.valueParameters.find { it.name == name }?.index ?: return null
+        return getValueArgument(index)
     }
 
     private fun getAnnotationValueOrNull(annotation: IrConstructorCall, errorContext: IrElement): IrConst<String>? {
