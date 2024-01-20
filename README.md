@@ -64,7 +64,7 @@ plugins {
     // io.github.vlsi.kotlin-argument-expression plugin
     // * adds implementation dependency on io.github.vlsi.kae:argument-expression-annotations
     // * configures io.github.vlsi.kae.CallerArgumentExpression annotation for compiler plugin
-    id("io.github.vlsi.kotlin-argument-expression") version "1.0.4"
+    id("io.github.vlsi.kotlin-argument-expression") version "1.0.5"
 }
 
 // extension type: io.github.vlsi.kae.gradle.KotlinArgumentExpressionExtension
@@ -79,7 +79,7 @@ of `io.github.vlsi.kae:argument-expression-annotations` dependency, you can use 
 
 ```kotlin
 plugins {
-    id("io.github.vlsi.kotlin-argument-expression-base") version "1.0.4"
+    id("io.github.vlsi.kotlin-argument-expression-base") version "1.0.5"
 }
 
 // extension type: io.github.vlsi.kae.gradle.KotlinArgumentExpressionExtension
