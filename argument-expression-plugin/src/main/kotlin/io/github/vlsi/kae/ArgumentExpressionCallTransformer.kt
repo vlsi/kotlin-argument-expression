@@ -163,9 +163,8 @@ class ArgumentExpressionCallTransformer(
                     val text = sourceFile.expressionTextOrNull(expressionValue)
                         ?: continue
                     // Actually pass the expression text
-                    expression.putArgument(
-                        function,
-                        parameter,
+                    expression.putValueArgument(
+                        parameter.index,
                         IrConstImpl.string(
                             UNDEFINED_OFFSET,
                             UNDEFINED_OFFSET,
@@ -230,9 +229,8 @@ class ArgumentExpressionCallTransformer(
                                 )
                             }
                         }
-                expression.putArgument(
-                    function,
-                    parameter,
+                expression.putValueArgument(
+                    parameter.index,
                     res
                 )
             }
