@@ -45,7 +45,9 @@ jobs:
       - name: Set up Java ${{ matrix.java_version }}, ${{ matrix.java_distribution }}
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ matrix.java_version }}
+          java-version: |
+            17
+            ${{ matrix.java_version }}
           distribution: ${{ matrix.java_distribution }}
           check-latest: true
 
