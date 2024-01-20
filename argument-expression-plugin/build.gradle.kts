@@ -12,3 +12,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.9")
 }
+
+tasks.compileKotlin {
+    kotlinOptions.freeCompilerArgs += "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi"
+}

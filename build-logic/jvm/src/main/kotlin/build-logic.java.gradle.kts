@@ -14,8 +14,9 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
 
 sourceSets {
@@ -51,6 +52,7 @@ tasks.configureEach<JavaCompile> {
     options.apply {
         encoding = "UTF-8"
         compilerArgs.add("-Xlint:deprecation")
+        release.set(8)
         if (JavaVersion.current().isJava9Compatible) {
             // See https://bugs.openjdk.org/browse/JDK-8032211
             // Don't issue deprecation warnings on import statements is resolved in Java 9+

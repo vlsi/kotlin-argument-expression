@@ -1,4 +1,3 @@
-//import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -15,10 +14,9 @@ java {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-// TODO: add when upgrade to Kotlin 1.8+
-//    compilerOptions {
-//        jvmTarget.set(JvmTarget.JVM_1_8)
-//    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 autostyle {
