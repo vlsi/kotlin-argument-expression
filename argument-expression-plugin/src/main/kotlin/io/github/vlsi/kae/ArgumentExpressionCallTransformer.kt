@@ -26,7 +26,6 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
-import org.jetbrains.kotlin.ir.backend.js.utils.asString
 import org.jetbrains.kotlin.ir.builders.irCall
 import org.jetbrains.kotlin.ir.builders.irString
 import org.jetbrains.kotlin.ir.builders.irVararg
@@ -37,6 +36,7 @@ import org.jetbrains.kotlin.ir.types.getArrayElementType
 import org.jetbrains.kotlin.ir.types.isArray
 import org.jetbrains.kotlin.ir.types.isNullableArray
 import org.jetbrains.kotlin.ir.types.isStringClassType
+import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.fileOrNull
 import org.jetbrains.kotlin.ir.util.findAnnotation
 import org.jetbrains.kotlin.ir.util.isVararg
@@ -113,7 +113,7 @@ class ArgumentExpressionCallTransformer(
                 messageCollector.report(
                     CompilerMessageSeverity.ERROR,
                     "Only String and Array<String> are supported as argument expression types. " +
-                            "Parameter '${parameter.name.asString()}' is of type ${parameter.type.asString()}",
+                            "Parameter '${parameter.name.asString()}' is of type ${parameter.type.dumpKotlinLike()}",
                     errorContext.location
                 )
             }
@@ -178,7 +178,7 @@ class ArgumentExpressionCallTransformer(
                         CompilerMessageSeverity.WARNING,
                         "Function '${function.name.asString()}' is improperly declared: " +
                                 "only String and Array<String> types can serve as parameter description only. " +
-                                "Parameter '${parameter.name.asString()}' has type ${parameterType.asString()}",
+                                "Parameter '${parameter.name.asString()}' has type ${parameterType.dumpKotlinLike()}",
                         errorContext.location
                     )
                     continue
@@ -192,7 +192,7 @@ class ArgumentExpressionCallTransformer(
                         "Function '${function.name.asString()}' is improperly declared: " +
                                 "only vararg arguments can be described as Array<String>. " +
                                 "Parameter '$argName' is not a vararg in '${function.name.asString()}', however " +
-                                "'${parameter.name.asString()}' has type ${parameterType.asString()}",
+                                "'${parameter.name.asString()}' has type ${parameterType.dumpKotlinLike()}",
                         errorContext.location
                     )
                     continue
@@ -203,7 +203,7 @@ class ArgumentExpressionCallTransformer(
                         CompilerMessageSeverity.WARNING,
                         "Function ${function.name.asString()} is improperly declared: " +
                                 "vararg parameters can be described to String and Array<String> only. " +
-                                "Parameter ${parameter.name.asString()} has type ${parameterType.asString()}",
+                                "Parameter ${parameter.name.asString()} has type ${parameterType.dumpKotlinLike()}",
                         errorContext.location
                     )
                     continue
@@ -259,7 +259,7 @@ class ArgumentExpressionCallTransformer(
         if (valueArgument !is IrConst<*>) {
             messageCollector.report(
                 CompilerMessageSeverity.ERROR,
-                "Value argument of ${annotation.annotationClass} should be a constant, got ${valueArgument.type.asString()}",
+                "Value argument of ${annotation.annotationClass} should be a constant, got ${valueArgument.type.dumpKotlinLike()}",
                 errorContext.location
             )
             return null

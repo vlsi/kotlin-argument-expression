@@ -21,14 +21,15 @@ import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.com.intellij.mock.MockProject
-import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.name.FqName
 
-@AutoService(ComponentRegistrar::class)
+@AutoService(org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar::class)
+// ComponentRegistrar is deprecated, see https://youtrack.jetbrains.com/issue/KT-52665
+@Suppress("deprecation")
 class ArgumentExpressionRegistrar(
     val argumentExpressionAnnotation: Set<FqName>
-) : ComponentRegistrar {
+) : org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar {
     @Suppress("unused")
     constructor() : this(emptySet()) // Used by service loader
 

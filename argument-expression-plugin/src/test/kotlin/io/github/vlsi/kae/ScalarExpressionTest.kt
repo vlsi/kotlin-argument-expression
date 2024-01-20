@@ -191,7 +191,7 @@ class ScalarExpressionTest {
             ) = ""
             """.trimIndent(),
             """
-            (4, 5): Only String and Array<String> are supported as argument expression types. Parameter 'xDescription' is of type kotlin.Int
+            (4, 5): Only String and Array<String> are supported as argument expression types. Parameter 'xDescription' is of type Int
             """.trimIndent()
         )
     }
