@@ -35,7 +35,7 @@ class KotlinArgumentExpressionGradleSubplugin : KotlinCompilerPluginSupportPlugi
         SubpluginArtifact(
             groupId = "io.github.vlsi.kae",
             artifactId = "argument-expression-plugin",
-            version = "1.0.6"
+            version = "1.0.7"
         )
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean =

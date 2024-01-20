@@ -22,7 +22,7 @@ plugins {
 
 plugins.withId("java") {
     dependencies {
-        "implementation"("io.github.vlsi.kae:argument-expression-annotations:1.0.6")
+        "implementation"("io.github.vlsi.kae:argument-expression-annotations:1.0.7")
     }
 }
 
